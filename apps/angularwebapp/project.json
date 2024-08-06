@@ -16,6 +16,7 @@
         "polyfills": ["zone.js"],
         "tsConfig": "apps/angularwebapp/tsconfig.app.json",
         "inlineStyleLanguage": "scss",
+        "baseHref": "/web/",
         "assets": [
           {
             "glob": "**/*",
