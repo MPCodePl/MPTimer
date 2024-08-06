@@ -1,4 +1,4 @@
-name: CI
+name: AngularWebAppCI
 
 on:
   push:
@@ -32,28 +32,8 @@ jobs:
       - run: npm ci --legacy-peer-deps
       - uses: nrwl/nx-set-shas@v4
 
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.ANGULAR_WEB_APP_SECRET }}
-
       # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
       # - run: npx nx-cloud record -- echo Hello World
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       - run: npx nx affected -t lint test build
       # - run: npx nx affected --parallel 1 -t e2e-ci
-      - name: Clear destination
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az storage blob delete-batch --account-name angularwebapp --auth-mode key -s 'web'
-      - name: Upload to blob storage
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az storage blob upload-batch --overwrite --account-name angularwebapp --auth-mode key -d 'web' -s ./dist/apps/angularwebapp/browser
-
-      # Azure logout
-      - name: logout
-        run: |
-          az logout
-        if: always()
