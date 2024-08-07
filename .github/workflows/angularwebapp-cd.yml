@@ -6,12 +6,12 @@ concurrency:
 
 on:
   push:
-    branches: [ "main" ]
+    branches: ['main']
   workflow_dispatch:
-  
+
 permissions:
   contents: read
-  
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -37,15 +37,15 @@ jobs:
       # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
       # - run: npx nx-cloud record -- echo Hello World
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
-      - run: npx nx affected -t lint test build
+      - run: npx nx build angularwebapp
       # - run: npx nx affected --parallel 1 -t e2e-ci
-      
+
       - name: Upload artifact for deployment job
-        if: ${{ hashFiles('dist/apps/angularwebapp/browser') != '' }}
         uses: actions/upload-artifact@v3
         with:
-            name: angularwebapp
-            path: .
+          name: angularwebapp
+          path: .
+
   deploy:
     runs-on: ubuntu-latest
     needs: build
