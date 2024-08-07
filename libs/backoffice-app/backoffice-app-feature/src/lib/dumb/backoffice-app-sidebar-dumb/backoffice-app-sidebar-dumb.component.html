@@ -6,12 +6,10 @@
     @for (menuItem of $menuItems(); track $index) {
     <div
       class="flex w-64 cursor-pointer hover:bg-slate-400 hover:text-slate-800"
+      [routerLink]="[menuItem.routerLink]"
     >
-      <div
-        class="w-16 h-16 flex justify-center items-center"
-        (click)="toggleExpanded()"
-      >
-        <i class="text-2xl transition" [ngClass]="menuItem.icon"></i>
+      <div class="w-16 h-16 flex justify-center items-center">
+        <i class="text-2xl" [ngClass]="menuItem.icon"></i>
       </div>
       <div class="flex items-center text-lg">
         {{ menuItem.label }}
@@ -20,11 +18,11 @@
     }
   </div>
   <div class="border-b border-white mx-2"></div>
-  <div class="flex w-64 cursor-pointer hover:bg-slate-400 hover:text-slate-800">
-    <div
-      class="w-16 h-16 flex justify-center items-center"
-      (click)="toggleExpanded()"
-    >
+  <div
+    class="flex w-64 cursor-pointer hover:bg-slate-400 hover:text-slate-800"
+    (click)="toggleExpanded()"
+  >
+    <div class="w-16 h-16 flex justify-center items-center">
       <i
         class="ri-arrow-right-line text-2xl transition"
         [class.rotate-180]="$expanded()"
