@@ -97,7 +97,7 @@ jobs:
         with:
           app-name: 'angularwebapp2'
           slot-name: 'production'
-          package: /angularwebapp2/browser
+          package: angularwebapp2/browser
 
       # Azure logout
       - name: logout
