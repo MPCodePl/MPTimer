@@ -68,3 +68,8 @@ jobs:
         with:
           inlineScript: |
             az storage blob upload-batch --overwrite --account-name angularwebapp --auth-mode key -d 'web' -s .
+      # Azure logout
+      - name: logout
+        run: |
+          az logout
+        if: always()
