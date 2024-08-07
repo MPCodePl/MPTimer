@@ -1,4 +1,4 @@
-name: CI
+name: CI - Nx check if build is working
 
 on:
   pull_request:

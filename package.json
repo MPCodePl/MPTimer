@@ -2,7 +2,9 @@
   "name": "@knowledge-sandbox-nx/source",
   "version": "0.0.0",
   "license": "MIT",
-  "scripts": {},
+  "scripts": {
+    "test": "nx run-many -t test"
+  },
   "private": true,
   "dependencies": {
     "@angular/animations": "~18.1.0",
