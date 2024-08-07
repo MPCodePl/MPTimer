@@ -58,3 +58,8 @@ jobs:
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.ANGULAR_WEB_APP_SECRET }}
+      - name: Clear destination
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob delete-batch --account-name angularwebapp --auth-mode key -s 'web'
