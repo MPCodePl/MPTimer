@@ -1,4 +1,4 @@
-name: DeployAngularWebApp
+name: Build and deploy AngularWebApp to Storage Container
 
 concurrency:
   group: deployAngularWebApp
@@ -55,14 +55,17 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: angularwebapp
+
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.ANGULAR_WEB_APP_SECRET }}
+
       - name: Clear destination
         uses: azure/CLI@v1
         with:
           inlineScript: |
             az storage blob delete-batch --account-name angularwebapp --auth-mode key -s 'web'
+
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
