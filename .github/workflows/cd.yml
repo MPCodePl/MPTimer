@@ -70,7 +70,7 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob upload-batch --overwrite --account-name angularwebapp --auth-mode key -d 'web' -s /angularwebapp/browser
+            az storage blob upload-batch --overwrite --account-name angularwebapp --auth-mode key -d 'web' -s 'angularwebapp/browser'
       # Azure logout
       - name: logout
         run: |
