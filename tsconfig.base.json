@@ -14,7 +14,11 @@
     "skipLibCheck": true,
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
-    "paths": {}
+    "paths": {
+      "@knowledge-sandbox-nx/backoffice-app-feature": [
+        "libs/backoffice-app/backoffice-app-feature/src/index.ts"
+      ]
+    }
   },
   "exclude": ["node_modules", "tmp"]
 }

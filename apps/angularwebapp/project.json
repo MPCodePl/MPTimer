@@ -23,7 +23,10 @@
             "input": "apps/angularwebapp/public"
           }
         ],
-        "styles": ["apps/angularwebapp/src/styles.scss"],
+        "styles": [
+          "apps/angularwebapp/src/styles.scss",
+          "node_modules/remixicon/fonts/remixicon.css"
+        ],
         "scripts": []
       },
       "configurations": {
