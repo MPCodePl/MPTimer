@@ -3,6 +3,10 @@
 
 name: Build and deploy dotnet core app to Azure Function App - MPTimerFunctions
 
+concurrency:
+  group: deployDotNet
+  cancel-in-progress: true
+
 on:
   push:
     branches:

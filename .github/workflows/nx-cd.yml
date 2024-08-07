@@ -1,7 +1,7 @@
 name: Build and deploy AngularWebApp to Storage Container
 
 concurrency:
-  group: deployAngularWebApp
+  group: deployNx
   cancel-in-progress: true
 
 on:
