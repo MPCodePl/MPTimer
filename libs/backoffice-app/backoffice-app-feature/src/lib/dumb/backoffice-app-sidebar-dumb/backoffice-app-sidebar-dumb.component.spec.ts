@@ -1,5 +1,6 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { BackofficeAppSidebarDumbComponent } from './backoffice-app-sidebar-dumb.component';
+import { provideRouter } from '@angular/router';
 
 describe('BackofficeAppSidebarDumbComponent', () => {
   let component: BackofficeAppSidebarDumbComponent;
@@ -8,6 +9,7 @@ describe('BackofficeAppSidebarDumbComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [BackofficeAppSidebarDumbComponent],
+      providers: [provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(BackofficeAppSidebarDumbComponent);

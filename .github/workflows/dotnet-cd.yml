@@ -1,4 +1,4 @@
-name: Build dotnet core app - MPTimerFunctions
+name: CI - dotnet check if build is working
 
 on:
   pull_request:
