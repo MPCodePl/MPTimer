@@ -16,6 +16,7 @@ on:
 env:
   SOLUTION_PATH: './MPTimer' # set this to the path to your web app project, defaults to the repository root
   EMAIL_PATH: './Emails/Emails/bin/Release/net8.0' # set this to the path to your web app project, defaults to the repository root
+  SPECTATOR_PATH: './Spectator/Spectator/bin/Release/net8.0' # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
 
 jobs:
@@ -69,3 +70,27 @@ jobs:
           app-name: 'MPTimerFunctions'
           slot-name: 'production'
           package: '${{ env.EMAIL_PATH }}'
+
+  deploySpectator:
+    runs-on: windows-latest
+    needs: build
+    permissions:
+      id-token: write #This is required for requesting the JWT
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: dotnetbuild
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.ANGULAR_WEB_APP_SECRET }}
+
+      - name: 'Run Azure Functions Action'
+        uses: Azure/functions-action@v1
+        id: fa
+        with:
+          app-name: 'MPTimerFunctions'
+          slot-name: 'production'
+          package: '${{ env.SPECTATOR_PATH }}'
