@@ -37,7 +37,7 @@ jobs:
         shell: pwsh
         run: |
           pushd './${{ env.SOLUTION_PATH }}'
-          dotnet build --configuration Release --output ./output
+          dotnet build --configuration Release
           popd
 
       - name: Upload artifacts
