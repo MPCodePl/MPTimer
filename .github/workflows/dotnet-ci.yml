@@ -4,7 +4,7 @@ on:
   pull_request:
 
 env:
-  AZURE_FUNCTIONAPP_PACKAGE_PATH: './MPTimer/MPTimer' # set this to the path to your web app project, defaults to the repository root
+  AZURE_FUNCTIONAPP_PACKAGE_PATH: './MPTimer' # set this to the path to your web app project, defaults to the repository root
   DOTNET_VERSION: '8.0.x' # set this to the dotnet version to use
 
 jobs:
@@ -21,10 +21,18 @@ jobs:
         uses: actions/setup-dotnet@v1
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+          cache: true
 
-      - name: 'Resolve Project Dependencies Using Dotnet'
+      - name: 'Build dot net'
         shell: pwsh
         run: |
           pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
           dotnet build --configuration Release --output ./output
+          popd
+
+      - name: 'Test dot net'
+        shell: pwsh
+        run: |
+          pushd './${{ env.AZURE_FUNCTIONAPP_PACKAGE_PATH }}'
+          dotnet test
           popd
