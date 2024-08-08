@@ -3,11 +3,9 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MPTimer", "MPTimer\MPTimer.csproj", "{6B21FDDC-414D-49A0-8496-80E8D222E16B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emails", "Emails\Emails\Emails.csproj", "{6B21FDDC-414D-49A0-8496-80E8D222E16B}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Features", "FEatures", "{618C6E86-87AD-47B4-B3BF-415008974C2D}"
-EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmailFeature", "EmailFeature\EmailFeature.csproj", "{F5D1D406-1436-4647-96D5-F246EA17D30C}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Emails", "Emails", "{BAE351A4-7283-4006-9D9D-244FFA06A41E}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -19,16 +17,12 @@ Global
 		{6B21FDDC-414D-49A0-8496-80E8D222E16B}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6B21FDDC-414D-49A0-8496-80E8D222E16B}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6B21FDDC-414D-49A0-8496-80E8D222E16B}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F5D1D406-1436-4647-96D5-F246EA17D30C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F5D1D406-1436-4647-96D5-F246EA17D30C}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F5D1D406-1436-4647-96D5-F246EA17D30C}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F5D1D406-1436-4647-96D5-F246EA17D30C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{F5D1D406-1436-4647-96D5-F246EA17D30C} = {618C6E86-87AD-47B4-B3BF-415008974C2D}
+		{6B21FDDC-414D-49A0-8496-80E8D222E16B} = {BAE351A4-7283-4006-9D9D-244FFA06A41E}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {67A94C90-4EDB-4214-9A8D-26B795CA761D}

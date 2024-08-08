@@ -3,7 +3,7 @@ using EmailFeature;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
-namespace MPTimer
+namespace Emails
 {
   public class EmailQueueFunction
   {
