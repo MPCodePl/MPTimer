@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35027.167
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emails", "Emails\Emails\Emails.csproj", "{6B21FDDC-414D-49A0-8496-80E8D222E16B}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Emails", "Emails\Emails.csproj", "{6B21FDDC-414D-49A0-8496-80E8D222E16B}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Emails", "Emails", "{BAE351A4-7283-4006-9D9D-244FFA06A41E}"
 EndProject
