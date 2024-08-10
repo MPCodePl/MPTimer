@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Spectator.Logic;
+using FromBodyAttribute = Microsoft.Azure.Functions.Worker.Http.FromBodyAttribute;
 
 namespace Spectator
 {
@@ -12,13 +13,19 @@ namespace Spectator
     private readonly IConfiguration _configuration = configuration;
 
     [Function("AddSpectatorFunction")]
-    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "spectator")] HttpRequest req)
+    public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "spectator")] HttpRequest req, [FromBody] CreateSpectatorDto createSpectatorDto)
     {
       // Tworzenie referencji do kolejki
       string connectionString = _configuration.GetConnectionString("ANGULAR_WEBAPP_STORAGE_CONNECTION_STRING") ?? throw new Exception("Configuration is required");
       string queueName = "spectator-created-queue";  // Zamień na nazwę swojej kolejki
       QueueClient queueClient = new(connectionString, queueName);
-      var model = new AddSpectatorModel(Guid.NewGuid(), "micha.duch@gmail.com", "Michał Paduch", "uniqueAccessToken");
+      var uniqueAccessToken = Guid.NewGuid();
+      var userId = "a96dcbe0-96a6-440c-8cfe-25fc0eac997c";
+      var model = new AddSpectatorModel(
+        Guid.Parse(userId),
+        createSpectatorDto.SpectatorEmail,
+        createSpectatorDto.SpectatorName,
+        uniqueAccessToken.ToString());
       await spectatorRepository.AddSpectatorAsync(model);
       // Sprawdzenie, czy kolejka istnieje, jeśli nie - tworzenie jej
       await queueClient.CreateIfNotExistsAsync();
