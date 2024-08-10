@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Configuration;
 using Spectator.Logic;
+using System.Text.Json;
 using FromBodyAttribute = Microsoft.Azure.Functions.Worker.Http.FromBodyAttribute;
 
 namespace Spectator
@@ -16,9 +17,12 @@ namespace Spectator
     public async Task<IActionResult> Run([HttpTrigger(AuthorizationLevel.Anonymous, "post", Route = "spectator")] HttpRequest req, [FromBody] CreateSpectatorDto createSpectatorDto)
     {
       // Tworzenie referencji do kolejki
-      string connectionString = _configuration.GetConnectionString("ANGULAR_WEBAPP_STORAGE_CONNECTION_STRING") ?? throw new Exception("Configuration is required");
+      string connectionString = _configuration.GetConnectionString("SPECTATOR_CONTEXT_CONNECTION_STRING") ?? throw new Exception("Configuration is required");
       string queueName = "spectator-created-queue";  // Zamień na nazwę swojej kolejki
-      QueueClient queueClient = new(connectionString, queueName);
+      QueueClient queueClient = new(connectionString, queueName, new QueueClientOptions
+      {
+        MessageEncoding = QueueMessageEncoding.Base64,
+      });
       var uniqueAccessToken = Guid.NewGuid();
       var userId = "a96dcbe0-96a6-440c-8cfe-25fc0eac997c";
       var model = new AddSpectatorModel(
@@ -32,7 +36,9 @@ namespace Spectator
       if (queueClient.Exists())
       {
         // Wysyłanie wiadomości do kolejki
-        await queueClient.SendMessageAsync("test");
+        var serializeOptions = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
+        var modelAsJson = JsonSerializer.Serialize(model, serializeOptions);
+        await queueClient.SendMessageAsync(modelAsJson);
       }
       else
       {
@@ -40,7 +46,6 @@ namespace Spectator
       }
 
       return new CreatedResult();
-
     }
   }
 }

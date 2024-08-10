@@ -1,19 +1,48 @@
+using System.Text.Json.Serialization;
+
 namespace Spectator.Logic
 {
-  public class AddSpectatorModel(
-    Guid userId,
-    string spectatorEmail,
-    string? spectatorName,
-    string accessToken,
-    Guid? id = null,
-    DateTimeOffset? created = null)
+  public class AddSpectatorModel
   {
-    public Guid Id { get; } = id ?? Guid.NewGuid();
-    public Guid UserId { get; } = userId;
-    public string AccessToken { get; } = accessToken;
-    public string SpectatorEmail { get; } = spectatorEmail;
-    public string? SpectatorName { get; } = spectatorName;
-    public DateTimeOffset Created { get; } = created ?? DateTimeOffset.Now;
+    public Guid Id { get; private set; }
+    public Guid UserId { get; private set; }
+    public string AccessToken { get; private set; }
+    public string SpectatorEmail { get; private set; }
+    public string? SpectatorName { get; private set; }
+    public DateTimeOffset Created { get; private set; }
+
+    public AddSpectatorModel(
+      Guid userId,
+      string spectatorEmail,
+      string? spectatorName,
+      string accessToken,
+      Guid? id = null,
+      DateTimeOffset? created = null)
+    {
+      UserId = userId;
+      SpectatorEmail = spectatorEmail;
+      SpectatorName = spectatorName;
+      AccessToken = accessToken;
+      Id = id ?? Guid.NewGuid();
+      Created = created ?? DateTimeOffset.Now;
+    }
+
+    [JsonConstructor]
+    public AddSpectatorModel(
+      Guid userId,
+      string spectatorEmail,
+      string? spectatorName,
+      string accessToken,
+      Guid id,
+      DateTimeOffset created)
+    {
+      Id = id;
+      UserId = userId;
+      SpectatorEmail = spectatorEmail;
+      SpectatorName = spectatorName;
+      AccessToken = accessToken;
+      Created = created;
+    }
 
     internal SpectatorDao CreateDao()
     {

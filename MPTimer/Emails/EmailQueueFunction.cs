@@ -1,5 +1,6 @@
 using Azure.Storage.Queues.Models;
 using Email.Logic;
+using EmailsApi;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
@@ -11,10 +12,10 @@ namespace Emails
     private readonly IEmailService _emailService = emailService;
 
     [Function(nameof(EmailQueueFunction))]
-    public void Run([QueueTrigger("email-queue", Connection = "ANGULAR_WEBAPP_STORAGE_CONNECTION_STRING")] QueueMessage message)
+    public void Run([QueueTrigger("email-queue", Connection = "EMAIL_CONTEXT_CONNECTION_STRING")] EmailModel message)
     {
-      _logger.LogInformation($"C# Queue trigger function processed: {message.MessageText}");
-      _emailService.SendEmail("micha.duch@gmail.com");
+      _logger.LogInformation($"C# Queue trigger function processed: {message.To}");
+      _emailService.SendEmail(message);
     }
   }
 }

@@ -1,7 +1,9 @@
+using EmailsApi;
+
 namespace Email.Logic
 {
   public interface IEmailService
   {
-    Task SendEmail(string to);
+    Task SendEmail(EmailModel email);
   }
 }

@@ -1,3 +1,4 @@
+using EmailsApi;
 using Mailjet.Client;
 using Mailjet.Client.TransactionalEmails;
 
@@ -13,18 +14,18 @@ namespace Email.Logic
     {
     }
 
-    public async Task SendEmail(string to)
+    public async Task SendEmail(EmailModel email)
     {
       // construct your email with builder
-      var email = new TransactionalEmailBuilder()
+      var emailToSend = new TransactionalEmailBuilder()
              .WithFrom(new SendContact(FROM, FROM_NAME))
-             .WithSubject("Test subject")
-             .WithHtmlPart("<h1>Header</h1>")
-             .WithTo(new SendContact(to))
+             .WithSubject(email.Subject)
+             .WithHtmlPart(email.Body)
+             .WithTo(new SendContact(email.To))
              .Build();
 
       // invoke API to send email
-      await _client.SendTransactionalEmailAsync(email);
+      await _client.SendTransactionalEmailAsync(emailToSend);
     }
   }
 }
