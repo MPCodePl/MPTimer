@@ -61,13 +61,13 @@ jobs:
 
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.ANGULAR_WEB_APP_SECRET }}
+          creds: ${{ secrets.EMAILS_CONTEXT_SECRET }}
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'MPTimerFunctions'
+          app-name: 'EmailsContext'
           slot-name: 'production'
           package: '${{ env.EMAIL_PATH }}'
 
@@ -85,12 +85,12 @@ jobs:
 
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.ANGULAR_WEB_APP_SECRET }}
+          creds: ${{ secrets.SPECTATOR_SECRET }}
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
         id: fa
         with:
-          app-name: 'MPTimerFunctions'
+          app-name: 'Spectators'
           slot-name: 'production'
           package: '${{ env.SPECTATOR_PATH }}'

@@ -11,6 +11,7 @@ namespace Spectator
 {
   public class AddSpectatorFunction(IConfiguration configuration, ISpectatorRepository spectatorRepository)
   {
+    private readonly JsonSerializerOptions SerializeOptions = new() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
     private readonly IConfiguration _configuration = configuration;
 
     [Function("AddSpectatorFunction")]
@@ -36,8 +37,8 @@ namespace Spectator
       if (queueClient.Exists())
       {
         // Wysyłanie wiadomości do kolejki
-        var serializeOptions = new JsonSerializerOptions() { PropertyNamingPolicy = JsonNamingPolicy.CamelCase };
-        var modelAsJson = JsonSerializer.Serialize(model, serializeOptions);
+
+        var modelAsJson = JsonSerializer.Serialize(model, SerializeOptions);
         await queueClient.SendMessageAsync(modelAsJson);
       }
       else
