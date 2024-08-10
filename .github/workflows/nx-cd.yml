@@ -72,6 +72,10 @@ jobs:
           inlineScript: |
             az storage blob upload-batch --overwrite --account-name angularwebapp --auth-mode key -d '$web' -s 'angularwebapp/browser'
 
+      - name: Purge CDN
+      run:
+        az cdn endpoint purge -n ${{ secrets.AZURE_CDN_ENDPOINT }} --profile-name ${{ secrets.AZURE_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.AZURE_RESOURCE_GROUP }} --no-wait
+
       # Azure logout
       - name: logout
         run: |
