@@ -64,13 +64,13 @@ jobs:
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob delete-batch --account-name angularwebapp --auth-mode key -s 'web'
+            az storage blob delete-batch --account-name angularwebapp --auth-mode key -s '$web'
 
       - name: Upload to blob storage
         uses: azure/CLI@v1
         with:
           inlineScript: |
-            az storage blob upload-batch --overwrite --account-name angularwebapp --auth-mode key -d 'web' -s 'angularwebapp/browser'
+            az storage blob upload-batch --overwrite --account-name angularwebapp --auth-mode key -d '$web' -s 'angularwebapp/browser'
 
       # Azure logout
       - name: logout
