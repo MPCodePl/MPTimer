@@ -1,14 +1,8 @@
-namespace EmailFeature
+namespace Email.Logic
 {
-  public class EmailConfiguration
+  public class EmailConfiguration(string apiKey, string apiSecret)
   {
-    public EmailConfiguration(string apiKey, string apiSecret)
-    {
-      ApiKey = apiKey;
-      ApiSecret = apiSecret;
-    }
-
-    public string ApiKey { get; set; }
-    public string ApiSecret { get; set; }
+    public string ApiKey { get; set; } = apiKey;
+    public string ApiSecret { get; set; } = apiSecret;
   }
 }

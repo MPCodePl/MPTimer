@@ -1,8 +1,7 @@
 using Mailjet.Client;
-using Mailjet.Client.Resources;
 using Mailjet.Client.TransactionalEmails;
 
-namespace EmailFeature
+namespace Email.Logic
 {
   public class EmailService : IEmailService
   {
@@ -16,11 +15,6 @@ namespace EmailFeature
 
     public async Task SendEmail(string to)
     {
-      MailjetRequest request = new()
-      {
-        Resource = Send.Resource
-      };
-
       // construct your email with builder
       var email = new TransactionalEmailBuilder()
              .WithFrom(new SendContact(FROM, FROM_NAME))

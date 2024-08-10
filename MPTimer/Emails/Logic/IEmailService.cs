@@ -1,4 +1,4 @@
-namespace EmailFeature
+namespace Email.Logic
 {
   public interface IEmailService
   {

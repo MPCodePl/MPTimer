@@ -1,7 +1,7 @@
 
 using Microsoft.Extensions.DependencyInjection;
 
-namespace EmailFeature
+namespace Email.Logic
 {
   public static class MyConfigServiceCollectionExtensions
   {

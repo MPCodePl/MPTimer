@@ -1,20 +1,14 @@
 using Azure.Storage.Queues.Models;
-using EmailFeature;
+using Email.Logic;
 using Microsoft.Azure.Functions.Worker;
 using Microsoft.Extensions.Logging;
 
 namespace Emails
 {
-  public class EmailQueueFunction
+  public class EmailQueueFunction(ILogger<EmailQueueFunction> logger, IEmailService emailService)
   {
-    private readonly ILogger<EmailQueueFunction> _logger;
-    private readonly IEmailService _emailService;
-
-    public EmailQueueFunction(ILogger<EmailQueueFunction> logger, IEmailService emailService)
-    {
-      _logger = logger;
-      _emailService = emailService;
-    }
+    private readonly ILogger<EmailQueueFunction> _logger = logger;
+    private readonly IEmailService _emailService = emailService;
 
     [Function(nameof(EmailQueueFunction))]
     public void Run([QueueTrigger("email-queue", Connection = "ANGULAR_WEBAPP_STORAGE_CONNECTION_STRING")] QueueMessage message)

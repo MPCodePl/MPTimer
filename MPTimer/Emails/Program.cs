@@ -1,5 +1,5 @@
+using Email.Logic;
 using Microsoft.Extensions.Hosting;
-using EmailFeature;
 
 var host = new HostBuilder()
     .ConfigureFunctionsWorkerDefaults()

@@ -9,7 +9,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Emails", "Emails", "{BAE351
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Spectator", "Spectator", "{C4E14C10-2DC2-45B5-8544-3A092F76BBE1}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Spectator", "Spectator\Spectator.csproj", "{1627CFBE-7C94-4D4F-A5C9-F4EE316FF84A}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Spectator", "Spectator\Spectator.csproj", "{1627CFBE-7C94-4D4F-A5C9-F4EE316FF84A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
