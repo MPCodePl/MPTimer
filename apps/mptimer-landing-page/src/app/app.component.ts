@@ -13,7 +13,7 @@ export class AppComponent implements OnInit {
   private msalService = inject(MsalService);
 
   public year = new Date().getFullYear();
-  public githubLink = 'https://github.com/MPCodePl/knowledge-sandbox';
+  public githubLink = 'https://github.com/MPCodePl/MPTimer';
 
   constructor() {
     this.msalService.initialize();

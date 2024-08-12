@@ -1,8 +1,10 @@
 {
-  "name": "@knowledge-sandbox-nx/source",
+  "name": "mptimer",
   "version": "0.0.0",
   "license": "MIT",
   "scripts": {
+    "start:landing": "nx serve mptimer-landing-page",
+    "start:app": "nx serve mptimer-app",
     "test": "nx run-many -t test",
     "build": "nx run-many -t build",
     "lint": "nx run-many -t lint"

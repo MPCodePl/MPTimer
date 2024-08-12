@@ -15,7 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@knowledge-sandbox-nx/backoffice-app-feature": [
+      "mptimer/backoffice-app-feature": [
         "libs/backoffice-app/backoffice-app-feature/src/index.ts"
       ]
     }
