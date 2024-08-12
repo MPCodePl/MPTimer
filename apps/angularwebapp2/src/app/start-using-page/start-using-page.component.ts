@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, inject } from '@angular/core';
 import { CommonModule } from '@angular/common';
+import { MsalService } from '@azure/msal-angular';
 
 @Component({
   selector: 'app-start-using-page',
@@ -8,4 +9,10 @@ import { CommonModule } from '@angular/common';
   templateUrl: './start-using-page.component.html',
   styleUrl: './start-using-page.component.scss',
 })
-export class StartUsingPageComponent {}
+export class StartUsingPageComponent {
+  private msalService = inject(MsalService);
+
+  public signUp(): void {
+    this.msalService.loginRedirect();
+  }
+}

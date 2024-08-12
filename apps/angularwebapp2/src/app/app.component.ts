@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, inject } from '@angular/core';
 import { RouterLink, RouterOutlet } from '@angular/router';
+import { MsalService } from '@azure/msal-angular';
 
 @Component({
   standalone: true,
@@ -8,7 +9,17 @@ import { RouterLink, RouterOutlet } from '@angular/router';
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
+  private msalService = inject(MsalService);
+
   public year = new Date().getFullYear();
   public githubLink = 'https://github.com/MPCodePl/knowledge-sandbox';
+
+  constructor() {
+    this.msalService.initialize();
+  }
+
+  ngOnInit(): void {
+    this.msalService.handleRedirectObservable().subscribe();
+  }
 }

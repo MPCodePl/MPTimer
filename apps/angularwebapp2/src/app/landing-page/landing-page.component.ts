@@ -13,10 +13,6 @@ import { MsalService } from '@azure/msal-angular';
 export class LandingPageComponent {
   private msalService = inject(MsalService);
 
-  constructor() {
-    this.msalService.initialize();
-  }
-
   public signUp(): void {
     this.msalService.loginRedirect();
   }
