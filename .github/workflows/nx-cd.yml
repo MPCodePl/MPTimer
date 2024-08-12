@@ -99,7 +99,7 @@ jobs:
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: 'angularwebapp2'
+          app-name: 'mptimerlanding'
           slot-name: 'production'
           package: angularwebapp2/browser
 
