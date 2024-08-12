@@ -1,0 +1,36 @@
+<div class="bg-slate-800 p-2 flex justify-between shadow-lg relative">
+  <div class="container mx-auto flex justify-between flex-wrap">
+    <div class="text-white text-2xl cursor-pointer px-2" [routerLink]="['']">
+      MP<span class="text-orange-300">Timer</span>
+    </div>
+    <div class="flex items-center text-white gap-4">
+      <a [href]="githubLink" target="_blank">
+        <i class="ri-github-fill text-2xl"></i>
+      </a>
+      <a href="https://app.mptimer.net">
+        <div
+          class="hover:text-slate-800 hover:bg-slate-300 cursor-pointer px-2 py-1"
+        >
+          Log in <i class="ri-arrow-right-s-line m-1"></i>
+        </div>
+      </a>
+      <div
+        class="hover:text-slate-800 hover:bg-slate-300 cursor-pointer px-2 py-1"
+        [routerLink]="['start-using']"
+      >
+        Start using <i class="ri-flag-line m-1"></i>
+      </div>
+    </div>
+  </div>
+</div>
+
+<router-outlet></router-outlet>
+
+<div class="bg-slate-800 flex justify-center text-slate-200 p-2">
+  MPTimer {{ year }} <span class="mx-4">•</span>
+  <a [href]="githubLink" target="_blank">
+    Give
+    <span class="text-orange-300 mx-1">★</span> in
+    <i class="ri-github-fill mx-1"></i>
+  </a>
+</div>

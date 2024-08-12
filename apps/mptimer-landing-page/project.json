@@ -1,0 +1,89 @@
+{
+  "name": "mptimer-landing-page",
+  "$schema": "../../node_modules/nx/schemas/project-schema.json",
+  "projectType": "application",
+  "prefix": "app",
+  "sourceRoot": "apps/mptimer-landing-page/src",
+  "tags": [],
+  "targets": {
+    "build": {
+      "executor": "@angular-devkit/build-angular:application",
+      "outputs": ["{options.outputPath}"],
+      "options": {
+        "outputPath": "dist/apps/mptimer-landing-page",
+        "index": "apps/mptimer-landing-page/src/index.html",
+        "browser": "apps/mptimer-landing-page/src/main.ts",
+        "polyfills": ["zone.js"],
+        "tsConfig": "apps/mptimer-landing-page/tsconfig.app.json",
+        "inlineStyleLanguage": "scss",
+        "assets": [
+          {
+            "glob": "**/*",
+            "input": "apps/mptimer-landing-page/public"
+          }
+        ],
+        "styles": [
+          "apps/mptimer-landing-page/src/styles.scss",
+          "node_modules/remixicon/fonts/remixicon.css"
+        ],
+        "scripts": [],
+        "server": "apps/mptimer-landing-page/src/main.server.ts",
+        "prerender": true,
+        "ssr": {
+          "entry": "apps/mptimer-landing-page/server.ts"
+        }
+      },
+      "configurations": {
+        "production": {
+          "budgets": [
+            {
+              "type": "initial",
+              "maximumWarning": "500kb",
+              "maximumError": "1mb"
+            },
+            {
+              "type": "anyComponentStyle",
+              "maximumWarning": "2kb",
+              "maximumError": "4kb"
+            }
+          ],
+          "outputHashing": "all"
+        },
+        "development": {
+          "optimization": false,
+          "extractLicenses": false,
+          "sourceMap": true
+        }
+      },
+      "defaultConfiguration": "production"
+    },
+    "serve": {
+      "executor": "@angular-devkit/build-angular:dev-server",
+      "configurations": {
+        "production": {
+          "buildTarget": "mptimer-landing-page:build:production"
+        },
+        "development": {
+          "buildTarget": "mptimer-landing-page:build:development"
+        }
+      },
+      "defaultConfiguration": "development"
+    },
+    "extract-i18n": {
+      "executor": "@angular-devkit/build-angular:extract-i18n",
+      "options": {
+        "buildTarget": "mptimer-landing-page:build"
+      }
+    },
+    "lint": {
+      "executor": "@nx/eslint:lint"
+    },
+    "test": {
+      "executor": "@nx/jest:jest",
+      "outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
+      "options": {
+        "jestConfig": "apps/mptimer-landing-page/jest.config.ts"
+      }
+    }
+  }
+}
