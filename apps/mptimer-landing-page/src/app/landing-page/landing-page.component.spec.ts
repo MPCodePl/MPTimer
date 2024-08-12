@@ -1,5 +1,8 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { LandingPageComponent } from './landing-page.component';
+import { MockProvider } from 'ng-mocks';
+import { MsalService } from '@azure/msal-angular';
+import { provideRouter } from '@angular/router';
 
 describe('LandingPageComponent', () => {
   let component: LandingPageComponent;
@@ -8,6 +11,7 @@ describe('LandingPageComponent', () => {
   beforeEach(async () => {
     await TestBed.configureTestingModule({
       imports: [LandingPageComponent],
+      providers: [MockProvider(MsalService), provideRouter([])],
     }).compileComponents();
 
     fixture = TestBed.createComponent(LandingPageComponent);
