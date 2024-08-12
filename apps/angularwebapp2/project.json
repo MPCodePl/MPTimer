@@ -22,7 +22,10 @@
             "input": "apps/angularwebapp2/public"
           }
         ],
-        "styles": ["apps/angularwebapp2/src/styles.scss"],
+        "styles": [
+          "apps/angularwebapp2/src/styles.scss",
+          "node_modules/remixicon/fonts/remixicon.css"
+        ],
         "scripts": [],
         "server": "apps/angularwebapp2/src/main.server.ts",
         "prerender": true,
