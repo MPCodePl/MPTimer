@@ -95,13 +95,20 @@ jobs:
         with:
           creds: ${{ secrets.ANGULAR_WEB_APP_SECRET }}
 
-      - name: 'Deploy to Azure Web App'
-        uses: azure/webapps-deploy@v3
-        id: deploy-to-webapp
+      - name: Clear destination
+        uses: azure/CLI@v1
         with:
-          app-name: 'mptimerlanding'
-          slot-name: 'production'
-          package: angularwebapp2/browser
+          inlineScript: |
+            az storage blob delete-batch --account-name mptimerlanding --auth-mode key -s '$web'
+
+      - name: Upload to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload-batch --overwrite --account-name mptimerlanding --auth-mode key -d '$web' -s 'angularwebapp2/browser'
+
+      - name: Purge CDN
+        run: az cdn endpoint purge -n ${{ secrets.LANDING_APP_CDN_ENDPOINT }} --profile-name ${{ secrets.LANDING_APP_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.MAIN_RESOURCE_GROUP }} --no-wait
 
       # Azure logout
       - name: logout
