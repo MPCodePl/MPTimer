@@ -107,8 +107,8 @@ jobs:
           inlineScript: |
             az storage blob upload-batch --overwrite --account-name mptimerlanding --auth-mode key -d '$web' -s 'angularwebapp2/browser'
 
-      - name: Purge CDN
-        run: az cdn endpoint purge -n ${{ secrets.LANDING_APP_CDN_ENDPOINT }} --profile-name ${{ secrets.LANDING_APP_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.MAIN_RESOURCE_GROUP }} --no-wait
+      - name: Purge
+        run: az afd endpoint purge --endpoint-name ${{ secrets.LANDING_APP_CDN_ENDPOINT }} --profile-name ${{ secrets.LANDING_APP_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.MAIN_RESOURCE_GROUP }} --no-wait
 
       # Azure logout
       - name: logout
