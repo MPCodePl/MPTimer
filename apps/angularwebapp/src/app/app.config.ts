@@ -31,24 +31,6 @@ export function loggerCallback(logLevel: LogLevel, message: string) {
   console.log(message);
 }
 
-export const b2cPolicies = {
-  names: {
-    signUpSignIn: 'b2c_1_susi_reset_v2',
-    editProfile: 'b2c_1_edit_profile_v2',
-  },
-  authorities: {
-    signUpSignIn: {
-      authority:
-        'https://your-tenant-name.b2clogin.com/your-tenant-name.onmicrosoft.com/b2c_1_susi_reset_v2',
-    },
-    editProfile: {
-      authority:
-        'https://your-tenant-name.b2clogin.com/your-tenant-name.onmicrosoft.com/b2c_1_edit_profile_v2',
-    },
-  },
-  authorityDomain: 'your-tenant-name.b2clogin.com',
-};
-
 export function MSALInstanceFactory(): IPublicClientApplication {
   return new PublicClientApplication({
     auth: {

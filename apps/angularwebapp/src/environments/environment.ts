@@ -18,6 +18,10 @@ export const environment = {
         authority:
           'https://mptimer.b2clogin.com/mptimer.onmicrosoft.com/B2C_1_mptimersignupsignin',
       },
+      signUp: {
+        authority:
+          'https://mptimer.b2clogin.com/mptimer.onmicrosoft.com/B2C_1_mptimersignup',
+      },
       resetPassword: {
         authority:
           'https://mptimer.b2clogin.com/mptimer.onmicrosoft.com/B2C_1_PasswordReset',

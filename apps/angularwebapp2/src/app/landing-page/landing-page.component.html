@@ -12,12 +12,12 @@
       </div>
       <div>
         <div class="flex gap-10 flex-wrap justify-center">
-          <a
-            href="https://signup.mptimer.net"
+          <div
+            (click)="signUp()"
             class="bg-orange-400 w-48 rounded-md text-white p-2 justify-center text-2xl cursor-pointer flex items-center hover:shadow-lg"
           >
             Register
-          </a>
+          </div>
           <a
             href="https://offline.mptimer.net"
             class="bg-orange-400 w-48 rounded-md text-white p-2 text-2xl cursor-pointer flex items-center flex-col gap-2 hover:shadow-lg"
@@ -32,7 +32,7 @@
         <div class="flex justify-center">
           ... or
           <span
-            class="ml-1 cursor-pointer text-orange-400"
+            class="ml-1 cursor-pointer text-orange-400 hover:underline"
             [routerLink]="['start-using']"
             >compare plans</span
           >
