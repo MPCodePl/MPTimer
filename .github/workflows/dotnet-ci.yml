@@ -2,6 +2,7 @@ name: CI - dotnet check if build is working
 
 on:
   pull_request:
+  workflow_dispatch:
 
 env:
   AZURE_FUNCTIONAPP_PACKAGE_PATH: './MPTimer' # set this to the path to your web app project, defaults to the repository root

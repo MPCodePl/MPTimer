@@ -2,6 +2,7 @@ name: CI - Nx check if build is working
 
 on:
   pull_request:
+  workflow_dispatch:
 
 permissions:
   actions: read
