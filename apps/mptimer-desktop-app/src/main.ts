@@ -4,6 +4,8 @@ import { app, BrowserWindow } from 'electron';
 import App from './app/app';
 import log from 'electron-log/main';
 import * as path from 'path';
+import { resolve } from 'path';
+import { DB } from './db/db';
 
 export default class Main {
   static initialize() {
@@ -12,13 +14,15 @@ export default class Main {
       app.quit();
     }
 
-    const logPath = this.getLogLocation();
+    const mainPath = this.geMainPath();
     log.transports.file.resolvePathFn = () =>
-      path.join(logPath, 'logs/main.log');
+      path.join(mainPath, 'logs/main.log');
     Object.assign(console, log.functions);
     log.initialize();
     log.debug('App started');
-    log.debug(logPath);
+    log.debug(mainPath);
+    const dbPath = resolve(mainPath, 'mptimer.db');
+    DB.initialize(dbPath);
   }
 
   static bootstrapApp() {
@@ -34,7 +38,7 @@ export default class Main {
     }
   }
 
-  static getLogLocation(): string {
+  static geMainPath(): string {
     if (!app.isPackaged) {
       return __dirname.replace(/\\/g, '/');
     } else {
