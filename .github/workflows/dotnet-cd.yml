@@ -61,7 +61,7 @@ jobs:
 
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.EMAILS_CONTEXT_SECRET }}
+          creds: ${{ secrets.MPTIMER_GITHUB_CREDENTIALS }}
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
@@ -85,7 +85,7 @@ jobs:
 
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.SPECTATOR_SECRET }}
+          creds: ${{ secrets.MPTIMER_GITHUB_CREDENTIALS }}
 
       - name: 'Run Azure Functions Action'
         uses: Azure/functions-action@v1
