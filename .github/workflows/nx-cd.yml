@@ -73,7 +73,7 @@ jobs:
             az storage blob upload-batch --overwrite --account-name mptimerlanding --auth-mode key -d '$web' -s 'mptimer-landing-page/browser'
 
       - name: Purge
-        run: az cdn endpoint purge --endpoint-name ${{ secrets.LANDING_APP_CDN_ENDPOINT }} --profile-name ${{ secrets.MPTIMER_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.MAIN_RESOURCE_GROUP }} --no-wait
+        run: az cdn endpoint purge --endpoint-name ${{ secrets.LANDING_APP_CDN_ENDPOINT }} --profile-name ${{ secrets.MPTIMER_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.MPTIMER_RESOURCE_GROUP }} --no-wait
 
       # Azure logout
       - name: logout
@@ -108,7 +108,42 @@ jobs:
             az storage blob upload-batch --overwrite --account-name mptimerofflineapp --auth-mode key -d '$web' -s 'mptimer-offline-app/browser'
 
       - name: Purge
-        run: az cdn endpoint purge --endpoint-name ${{ secrets.OFFLINE_APP_CDN_ENDPOINT }} --profile-name ${{ secrets.MPTIMER_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.MAIN_RESOURCE_GROUP }} --no-wait
+        run: az cdn endpoint purge --endpoint-name ${{ secrets.OFFLINE_APP_CDN_ENDPOINT }} --profile-name ${{ secrets.MPTIMER_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.MPTIMER_RESOURCE_GROUP }} --no-wait
+
+      # Azure logout
+      - name: logout
+        run: |
+          az logout
+        if: always()
+
+  mptimer-app:
+    runs-on: ubuntu-latest
+    needs: build
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v3
+        with:
+          name: nxbuild
+
+      - uses: azure/login@v1
+        with:
+          creds: ${{ secrets.MPTIMER_GITHUB_CREDENTIALS }}
+
+      - name: Clear destination
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob delete-batch --account-name mptimerapp --auth-mode key -s '$web'
+
+      - name: Upload to blob storage
+        uses: azure/CLI@v1
+        with:
+          inlineScript: |
+            az storage blob upload-batch --overwrite --account-name mptimerapp --auth-mode key -d '$web' -s 'mptimer-app/browser'
+
+      - name: Purge
+        run: az cdn endpoint purge --endpoint-name ${{ secrets.APP_CDN_ENDPOINT }} --profile-name ${{ secrets.MPTIMER_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.MPTIMER_RESOURCE_GROUP }} --no-wait
 
       # Azure logout
       - name: logout
