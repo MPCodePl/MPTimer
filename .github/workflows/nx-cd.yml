@@ -46,41 +46,6 @@ jobs:
           name: nxbuild
           path: dist/apps
 
-  deployMpTimerApp:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-      - name: Download artifact from build job
-        uses: actions/download-artifact@v3
-        with:
-          name: nxbuild
-
-      - uses: azure/login@v1
-        with:
-          creds: ${{ secrets.ANGULAR_WEB_APP_SECRET }}
-
-      - name: Clear destination
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az storage blob delete-batch --account-name mptimer-app --auth-mode key -s '$web'
-
-      - name: Upload to blob storage
-        uses: azure/CLI@v1
-        with:
-          inlineScript: |
-            az storage blob upload-batch --overwrite --account-name mptimer-app --auth-mode key -d '$web' -s 'mptimer-app/browser'
-
-      - name: Purge CDN
-        run: az cdn endpoint purge -n ${{ secrets.MAIN_APP_CDN_ENDPOINT }} --profile-name ${{ secrets.MAIN_APP_CDN_PROFILE_NAME }} --content-paths "/*" --resource-group ${{ secrets.MAIN_RESOURCE_GROUP }} --no-wait
-
-      # Azure logout
-      - name: logout
-        run: |
-          az logout
-        if: always()
-
   mptimer-landing-page:
     runs-on: ubuntu-latest
     needs: build
@@ -93,7 +58,7 @@ jobs:
 
       - uses: azure/login@v1
         with:
-          creds: ${{ secrets.ANGULAR_WEB_APP_SECRET }}
+          creds: ${{ secrets.MPTIMER_GITHUB_CREDENTIALS }}
 
       - name: Clear destination
         uses: azure/CLI@v1
