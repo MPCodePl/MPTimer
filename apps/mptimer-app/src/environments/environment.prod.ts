@@ -1,7 +1,7 @@
 export const environment = {
   msalConfig: {
     auth: {
-      clientId: '#{APP_CLIENT_ID}#',
+      clientId: '#{{APP_CLIENT_ID}}#',
     },
   },
   apiConfig: {

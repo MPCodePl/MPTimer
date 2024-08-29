@@ -126,6 +126,15 @@ jobs:
         with:
           name: nxbuild
 
+      - name: Replace tokens
+        uses: cschleiden/replace-tokens@v1.3
+        with:
+          tokenPrefix: '#{{'
+          tokenSuffix: '}}#'
+          files: '["**/main-*.js"]'
+        env:
+          APP_CLIENT_ID: ${{ secrets.APP_CLIENT_ID }}
+
       - uses: azure/login@v1
         with:
           creds: ${{ secrets.MPTIMER_GITHUB_CREDENTIALS }}
