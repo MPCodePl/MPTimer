@@ -3,17 +3,32 @@ import { WorkTimesService } from '../work-times/logic/work-times.service';
 import { DateUtils } from '../utils/date.utils';
 import { WorkTimesModel } from '../work-times/models/work-times.model';
 import log from 'electron-log';
+import { MainWindow } from '../main-window/main-window';
 
 export class TrayService {
+  private readonly RUNNING_TIME_MENU_ID = 'RunningTime';
+  private readonly BREAKING_TIME_MENU_ID = 'BreakingTime';
+  private readonly WORK_TIME_MENU_ID = 'WorkTime';
+
   private menuTemplate: MenuItemConstructorOptions[] = [
     {
+      label: 'Open',
+      click: () => this.mainWindow.show(),
+    },
+    {
+      type: 'separator',
+    },
+    {
       label: 'Running time: -',
+      id: this.RUNNING_TIME_MENU_ID,
     },
     {
       label: 'Break time: -',
+      id: this.BREAKING_TIME_MENU_ID,
     },
     {
       label: 'Work time: -',
+      id: this.WORK_TIME_MENU_ID,
     },
     {
       type: 'separator',
@@ -29,7 +44,10 @@ export class TrayService {
   ];
   private tray: Tray;
 
-  constructor(private workTimeService: WorkTimesService) {}
+  constructor(
+    private workTimeService: WorkTimesService,
+    private mainWindow: MainWindow
+  ) {}
 
   public init(): void {
     log.debug(`${TrayService.name}.init`);
@@ -47,13 +65,19 @@ export class TrayService {
   }
 
   private updateTray(workTimes: WorkTimesModel): void {
-    this.menuTemplate[0].label = `Running time: ${DateUtils.formatTimeSpan(
+    this.menuTemplate.find(
+      (m) => m.id === this.RUNNING_TIME_MENU_ID
+    ).label = `Running time: ${DateUtils.formatTimeSpan(
       workTimes.runningTimeSeconds
     )}`;
-    this.menuTemplate[1].label = `Break time: ${DateUtils.formatTimeSpan(
+    this.menuTemplate.find(
+      (m) => m.id === this.BREAKING_TIME_MENU_ID
+    ).label = `Break time: ${DateUtils.formatTimeSpan(
       workTimes.breakTimeSeconds
     )}`;
-    this.menuTemplate[2].label = `Work time: ${DateUtils.formatTimeSpan(
+    this.menuTemplate.find(
+      (m) => m.id === this.WORK_TIME_MENU_ID
+    ).label = `Work time: ${DateUtils.formatTimeSpan(
       workTimes.workTimeSeconds
     )}`;
     const menu = Menu.buildFromTemplate(this.menuTemplate);

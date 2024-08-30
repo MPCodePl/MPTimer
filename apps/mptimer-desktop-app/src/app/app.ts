@@ -1,8 +1,5 @@
-import { BrowserWindow, shell, screen } from 'electron';
-import { rendererAppName, rendererAppPort } from './constants';
+import { BrowserWindow } from 'electron';
 import { environment } from '../environments/environment';
-import { join } from 'path';
-import { format } from 'url';
 import log from 'electron-log/main';
 import { EventsDbService } from '../features/events/logic/events-db.service';
 import eventsEpics from '../features/events/+state/events.effects';
@@ -14,11 +11,11 @@ import { EventModel } from '../features/events/models/event.model';
 import { loadEvents } from '../features/events/+state';
 import { DBController } from '../db/db-controller';
 import { MIGRATION_LIST } from '../db/migration-list';
+import { MainWindow } from '../features/main-window/main-window';
 
 export default class App {
   // Keep a global reference of the window object, if you don't, the window will
   // be closed automatically when the JavaScript object is garbage collected.
-  static mainWindow: Electron.BrowserWindow;
   static application: Electron.App;
   static BrowserWindow;
 
@@ -44,15 +41,15 @@ export default class App {
     // Dereference the window object, usually you would store windows
     // in an array if your app supports multi windows, this is the time
     // when you should delete the corresponding element.
-    App.mainWindow = null;
+    // App.mainWindow = null;
   }
 
   private static onRedirect(event: any, url: string) {
-    if (url !== App.mainWindow.webContents.getURL()) {
+    /*  if (url !== App.mainWindow.webContents.getURL()) {
       // this is a normal external redirect, open it in a new browser window
       event.preventDefault();
       shell.openExternal(url);
-    }
+    }*/
   }
 
   private static onReady() {
@@ -60,11 +57,6 @@ export default class App {
     // initialization and is ready to create browser windows.
     // Some APIs can only be used after this event occurs.
     App.setup();
-
-    if (rendererAppName) {
-      App.initMainWindow();
-      App.loadMainWindow();
-    }
   }
 
   private static async setup(): Promise<void> {
@@ -81,7 +73,8 @@ export default class App {
 
       const workSpaceEvents = new WorkspaceEventService(store);
       const workTimeService = new WorkTimesService(store);
-      const trayService = new TrayService(workTimeService);
+      const mainWindow = new MainWindow(App.application.isPackaged);
+      const trayService = new TrayService(workTimeService, mainWindow);
 
       workSpaceEvents.init();
       trayService.init();
@@ -116,67 +109,9 @@ export default class App {
   private static onActivate() {
     // On macOS it's common to re-create a window in the app when the
     // dock icon is clicked and there are no other windows open.
-    if (App.mainWindow === null) {
+    /* if (App.mainWindow === null) {
       App.onReady();
-    }
-  }
-
-  private static initMainWindow() {
-    const workAreaSize = screen.getPrimaryDisplay().workAreaSize;
-    const width = Math.min(1280, workAreaSize.width || 1280);
-    const height = Math.min(720, workAreaSize.height || 720);
-
-    // Create the browser window.
-    App.mainWindow = new BrowserWindow({
-      width: width,
-      height: height,
-      show: false,
-      webPreferences: {
-        contextIsolation: true,
-        backgroundThrottling: false,
-        preload: join(__dirname, 'main.preload.js'),
-      },
-    });
-    App.mainWindow.setMenu(null);
-    App.mainWindow.center();
-
-    // if main window is ready to show, close the splash window and show the main window
-    App.mainWindow.once('ready-to-show', () => {
-      // App.mainWindow.show();
-    });
-
-    // handle all external redirects in a new browser window
-    // App.mainWindow.webContents.on('will-navigate', App.onRedirect);
-    // App.mainWindow.webContents.on('new-window', (event, url, frameName, disposition, options) => {
-    //     App.onRedirect(event, url);
-    // });
-
-    // Emitted when the window is closed.
-    App.mainWindow.on('closed', () => {
-      // Dereference the window object, usually you would store windows
-      // in an array if your app supports multi windows, this is the time
-      // when you should delete the corresponding element.
-      App.mainWindow = null;
-    });
-  }
-
-  private static loadMainWindow() {
-    // load the index.html of the app.
-    App.mainWindow.webContents.openDevTools();
-    if (!App.application.isPackaged) {
-      const url = `http://localhost:${rendererAppPort}`;
-      log.debug(`Serving app from url: '${url}'`);
-      App.mainWindow.loadURL(url);
-    } else {
-      const path = join(__dirname, '..', rendererAppName, 'browser/index.html');
-      const fileUrl = format({
-        pathname: path,
-        protocol: 'file:',
-        slashes: true,
-      });
-      log.debug(`Serving app from file: '${fileUrl}'`);
-      App.mainWindow.loadURL(fileUrl);
-    }
+    }*/
   }
 
   static main(app: Electron.App, browserWindow: typeof BrowserWindow) {

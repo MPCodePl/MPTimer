@@ -6,6 +6,7 @@
     "start:landing": "nx serve mptimer-landing-page",
     "start:app": "nx serve mptimer-app",
     "start:desktop": "nx serve mptimer-desktop-app",
+    "start:desktop-web": "nx serve mptimer-desktop-app-web",
     "package:desktop": "nx run-many -t test -p mptimer-desktop-app mptimer-desktop-app-web & npx nx run mptimer-desktop-app:package",
     "test": "nx run-many -t test",
     "build": "nx run-many -t build",
