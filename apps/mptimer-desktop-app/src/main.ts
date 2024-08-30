@@ -5,10 +5,11 @@ import App from './app/app';
 import log from 'electron-log/main';
 import * as path from 'path';
 import { resolve } from 'path';
+import { DBController } from './db/db-controller';
 import { DB } from './db/db';
 
 export default class Main {
-  static initialize() {
+  static async initialize() {
     if (SquirrelEvents.handleEvents()) {
       // squirrel event handled (except first run event) and app will exit in 1000ms, so don't do anything else
       app.quit();
@@ -16,7 +17,7 @@ export default class Main {
 
     const mainPath = this.geMainPath();
     log.transports.file.resolvePathFn = () =>
-      path.join(mainPath, 'logs/main.log');
+      path.join(mainPath, `logs/${new Date().toISOString().split('T')[0]}.log`);
     Object.assign(console, log.functions);
     log.initialize();
     log.debug('App started');
@@ -49,7 +50,6 @@ export default class Main {
 
 // handle setup events as quickly as possible
 Main.initialize();
-
 // bootstrap app
 Main.bootstrapApp();
 Main.bootstrapAppEvents();

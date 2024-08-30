@@ -4,6 +4,16 @@ import { environment } from '../environments/environment';
 import { join } from 'path';
 import { format } from 'url';
 import log from 'electron-log/main';
+import { EventsDbService } from '../features/events/logic/events-db.service';
+import eventsEpics from '../features/events/+state/events.effects';
+import setupStore from './store';
+import { WorkspaceEventService } from '../features/events/logic/workspace-event.service';
+import { WorkTimesService } from '../features/work-times/logic/work-times.service';
+import { TrayService } from '../features/tray/tray.service';
+import { EventModel } from '../features/events/models/event.model';
+import { loadEvents } from '../features/events/+state';
+import { DBController } from '../db/db-controller';
+import { MIGRATION_LIST } from '../db/migration-list';
 
 export default class App {
   // Keep a global reference of the window object, if you don't, the window will
@@ -11,6 +21,10 @@ export default class App {
   static mainWindow: Electron.BrowserWindow;
   static application: Electron.App;
   static BrowserWindow;
+
+  static eventsDbService: EventsDbService;
+  static flagQuit = false;
+  static isQuiting = false;
 
   public static isDevelopmentMode() {
     const isEnvironmentSet: boolean = 'ELECTRON_IS_DEV' in process.env;
@@ -21,9 +35,9 @@ export default class App {
   }
 
   private static onWindowAllClosed() {
-    if (process.platform !== 'darwin') {
+    /*if (process.platform !== 'darwin') {
       App.application.quit();
-    }
+    }*/
   }
 
   private static onClose() {
@@ -45,9 +59,57 @@ export default class App {
     // This method will be called when Electron has finished
     // initialization and is ready to create browser windows.
     // Some APIs can only be used after this event occurs.
+    App.setup();
+
     if (rendererAppName) {
       App.initMainWindow();
       App.loadMainWindow();
+    }
+  }
+
+  private static async setup(): Promise<void> {
+    log.debug('Start App.setup');
+    try {
+      App.eventsDbService = new EventsDbService();
+
+      await DBController.initialize();
+      await DBController.migrate(MIGRATION_LIST);
+
+      log.debug('Setuping store');
+      const eventEffect = eventsEpics(App.eventsDbService);
+      const store = setupStore([eventEffect]);
+
+      const workSpaceEvents = new WorkspaceEventService(store);
+      const workTimeService = new WorkTimesService(store);
+      const trayService = new TrayService(workTimeService);
+
+      workSpaceEvents.init();
+      trayService.init();
+
+      await App.eventsDbService.addEvent(new EventModel('AppStarted'));
+      store.dispatch(loadEvents(new Date()));
+    } catch (err) {
+      log.error('Error setup: ', err);
+      throw err;
+    }
+  }
+
+  private static async onBeforeQuit(event: { preventDefault: () => void }) {
+    if (!App.flagQuit) {
+      event.preventDefault();
+
+      if (App.isQuiting) {
+        return;
+      }
+
+      try {
+        App.isQuiting = true;
+        await App.eventsDbService.addEvent(new EventModel('AppStopped'));
+      } finally {
+        App.flagQuit = true;
+        App.application.quit();
+        log.debug('App quited');
+      }
     }
   }
 
@@ -80,7 +142,7 @@ export default class App {
 
     // if main window is ready to show, close the splash window and show the main window
     App.mainWindow.once('ready-to-show', () => {
-      App.mainWindow.show();
+      // App.mainWindow.show();
     });
 
     // handle all external redirects in a new browser window
@@ -129,5 +191,6 @@ export default class App {
     App.application.on('window-all-closed', App.onWindowAllClosed); // Quit when all windows are closed.
     App.application.on('ready', App.onReady); // App is ready to load data
     App.application.on('activate', App.onActivate); // App is activated
+    App.application.on('before-quit', App.onBeforeQuit);
   }
 }
