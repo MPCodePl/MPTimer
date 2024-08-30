@@ -18,6 +18,7 @@
       "mptimer/backoffice-app-feature": [
         "libs/backoffice-app/backoffice-app-feature/src/index.ts"
       ],
+      "storybook-host": ["libs/storybook-host/src/index.ts"],
       "time-line-ui": ["libs/shared/time-line-ui/src/index.ts"]
     }
   },
