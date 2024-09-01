@@ -15,6 +15,7 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
+      "colors": ["libs/colors/src/index.ts"],
       "mptimer/backoffice-app-feature": [
         "libs/backoffice-app/backoffice-app-feature/src/index.ts"
       ],

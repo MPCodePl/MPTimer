@@ -13,6 +13,7 @@
       "executor": "@storybook/angular:start-storybook",
       "options": {
         "port": 4400,
+        "styles": ["libs/storybook-host/.storybook/tailwind-imports.scss"],
         "configDir": "libs/storybook-host/.storybook",
         "browserTarget": "storybook-host:build-storybook",
         "compodoc": false
@@ -28,6 +29,7 @@
       "outputs": ["{options.outputDir}"],
       "options": {
         "outputDir": "dist/storybook/storybook-host",
+        "styles": ["libs/storybook-host/.storybook/tailwind-imports.scss"],
         "configDir": "libs/storybook-host/.storybook",
         "browserTarget": "storybook-host:build-storybook",
         "compodoc": false

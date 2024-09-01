@@ -1,1 +1,47 @@
-<p class="bg-slate-900">time-line-ui works!</p>
+<div class="border border-black grid grid-cols-[auto_1fr]">
+  @for (section of sections(); track section.id) {
+  <div
+    class="border-r border-black px-4 py-2"
+    [ngClass]="{ 'border-t border-t-gray-400': $index !== 0 }"
+  >
+    {{ section.name }}
+  </div>
+  <div
+    class="flex relative items-center"
+    [ngClass]="{ 'border-t border-t-gray-400': $index !== 0 }"
+  >
+    @for (activity of section.activities; track activity.id) {
+    <div
+      class="h-2 absolute border border-gray-300 shadow-md cursor-pointer"
+      [style.left.%]="getStart(activity, hours())"
+      [style.width.%]="getWidth(activity, hours())"
+      [style.background]="section.color"
+      [pTooltip]="tooltipContent"
+    ></div>
+    <ng-template #tooltipContent>
+      <div>From: {{ activity.from | date : 'short' }}</div>
+      <div>To: {{ getTo(activity.to) | date : 'short' }}</div>
+      @if (activity.notes != null) {
+      <div>{{ activity.notes }}</div>
+      }
+    </ng-template>
+    } @for (hour of hours(); track hour) {
+    <div
+      class="min-h-10 h-full flex-1"
+      [ngClass]="{ 'border-l border-gray-400': $index !== 0 }"
+    ></div>
+    }
+  </div>
+  }
+  <div class="border-t border-black"></div>
+  <div class="flex border-t border-black">
+    @for (hour of hours(); track hour) {
+    <div
+      class="flex-1 flex justify-center items-center overflow-hidden"
+      [ngClass]="{ 'border-l border-gray-400': $index !== 0 }"
+    >
+      {{ hour }}
+    </div>
+    }
+  </div>
+</div>

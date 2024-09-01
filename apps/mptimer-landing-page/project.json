@@ -24,7 +24,9 @@
         ],
         "styles": [
           "apps/mptimer-landing-page/src/styles.scss",
-          "node_modules/remixicon/fonts/remixicon.css"
+          "node_modules/remixicon/fonts/remixicon.css",
+          "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+          "node_modules/primeng/resources/primeng.min.css"
         ],
         "scripts": [],
         "server": "apps/mptimer-landing-page/src/main.server.ts",
