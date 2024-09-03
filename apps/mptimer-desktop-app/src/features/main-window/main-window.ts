@@ -3,11 +3,33 @@ import log from 'electron-log';
 import { join } from 'path';
 import { rendererAppName, rendererAppPort } from '../../app/constants';
 import { format } from 'url';
+import { ipcMain } from 'electron/main';
+import { WorkTimesService } from '../work-times/logic/work-times.service';
+import { EventModel } from '../events/models/event.model';
 
 export class MainWindow {
-  constructor(private isPackaged: boolean) {}
+  constructor(
+    private isPackaged: boolean,
+    private workTimesService: WorkTimesService
+  ) {}
 
   private mainWindow: Electron.BrowserWindow;
+  private events: EventModel[];
+
+  public init(): void {
+    ipcMain.handle('eventsInit', (event) => {
+      return this.events;
+    });
+
+    this.workTimesService.allEvents$.subscribe((events) => {
+      this.events = events;
+      if (this.mainWindow == null) {
+        return;
+      }
+
+      this.mainWindow.webContents.send('eventsUpdated', events);
+    });
+  }
 
   public show(): void {
     log.debug(`${MainWindow.name}.show - start`);

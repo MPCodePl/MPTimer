@@ -73,9 +73,13 @@ export default class App {
 
       const workSpaceEvents = new WorkspaceEventService(store);
       const workTimeService = new WorkTimesService(store);
-      const mainWindow = new MainWindow(App.application.isPackaged);
+      const mainWindow = new MainWindow(
+        App.application.isPackaged,
+        workTimeService
+      );
       const trayService = new TrayService(workTimeService, mainWindow);
 
+      mainWindow.init();
       workSpaceEvents.init();
       trayService.init();
 
