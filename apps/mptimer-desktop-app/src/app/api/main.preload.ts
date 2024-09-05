@@ -1,5 +1,5 @@
 import { contextBridge, ipcRenderer } from 'electron';
-import { EventModel } from '../../features/events/models/event.model';
+import { EventModel } from 'event-models';
 
 contextBridge.exposeInMainWorld('electron', {
   getAppVersion: () => ipcRenderer.invoke('get-app-version'),

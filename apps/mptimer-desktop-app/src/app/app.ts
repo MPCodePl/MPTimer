@@ -7,11 +7,11 @@ import setupStore from './store';
 import { WorkspaceEventService } from '../features/events/logic/workspace-event.service';
 import { WorkTimesService } from '../features/work-times/logic/work-times.service';
 import { TrayService } from '../features/tray/tray.service';
-import { EventModel } from '../features/events/models/event.model';
 import { loadEvents } from '../features/events/+state';
 import { DBController } from '../db/db-controller';
 import { MIGRATION_LIST } from '../db/migration-list';
 import { MainWindow } from '../features/main-window/main-window';
+import { EventModel } from 'event-models';
 
 export default class App {
   // Keep a global reference of the window object, if you don't, the window will

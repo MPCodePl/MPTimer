@@ -23,7 +23,12 @@
             "input": "apps/mptimer-desktop-app-web/public"
           }
         ],
-        "styles": ["apps/mptimer-desktop-app-web/src/styles.scss"],
+        "styles": [
+          "apps/mptimer-desktop-app-web/src/styles.scss",
+          "node_modules/remixicon/fonts/remixicon.css",
+          "node_modules/primeng/resources/themes/lara-light-blue/theme.css",
+          "node_modules/primeng/resources/primeng.min.css"
+        ],
         "scripts": []
       },
       "configurations": {

@@ -1,5 +1,5 @@
 import { createSelector, createSlice } from '@reduxjs/toolkit';
-import { EventModel } from '../models/event.model';
+import { EventModel } from 'event-models';
 
 export const eventSlice = createSlice({
   name: 'event',
@@ -25,6 +25,12 @@ export const eventSlice = createSlice({
     addEvent(state, action: { type: string; payload: EventModel }) {
       return state;
     },
+    addEventSuccess(state, action: { type: string; payload: EventModel }) {
+      return {
+        ...state,
+        events: [...state.events, action.payload],
+      };
+    },
   },
 });
 
@@ -37,4 +43,5 @@ export const getEvents = createSelector(
   (state) => state.events
 );
 
-export const { loadEvents, loadEventsSuccess, addEvent } = eventSlice.actions;
+export const { loadEvents, loadEventsSuccess, addEvent, addEventSuccess } =
+  eventSlice.actions;

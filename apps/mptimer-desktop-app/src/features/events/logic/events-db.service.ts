@@ -1,8 +1,8 @@
 import { Database } from 'sqlite3';
 import { DB } from '../../../db/db';
-import { DateUtils } from '../../utils/date.utils';
-import { EventModel } from '../models/event.model';
+import { EventModel } from 'event-models';
 import log from 'electron-log';
+import { DateUtils } from 'utils';
 
 export class EventsDbService {
   public async addEvent(event: EventModel): Promise<void> {
@@ -25,9 +25,7 @@ export class EventsDbService {
     return new Promise((resolve, reject) => {
       const sql = `INSERT INTO Event (id, type, date, synced) VALUES ("${
         event.id
-      }", "${event.type}", "${DateUtils.format(event.date, {
-        includeTime: true,
-      })}", 0)`;
+      }", "${event.type}", "${event.date.toISOString()}", 0)`;
       db.run(sql, (err) => {
         if (err != null) {
           log.error(

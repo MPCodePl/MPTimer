@@ -10,10 +10,10 @@
     class="flex relative items-center"
     [ngClass]="{ 'border-t border-t-gray-400': $index !== 0 }"
   >
-    @for (activity of section.activities; track activity.id) {
+    @for (activity of section.activities ?? []; track activity.id) {
     <div
       class="h-2 absolute border border-gray-300 shadow-md cursor-pointer"
-      [style.left.%]="getStart(activity, hours())"
+      [style.left.%]="getActivityStart(activity, hours())"
       [style.width.%]="getWidth(activity, hours())"
       [style.background]="section.color"
       [pTooltip]="tooltipContent"
@@ -25,6 +25,13 @@
       <div>{{ activity.notes }}</div>
       }
     </ng-template>
+    } @for (action of section.actions ?? []; track action.id) {
+    <div
+      class="w-2 h-2 absolute flex items-center"
+      [style.left.%]="getActionStart(action, hours())"
+    >
+      <i class="relative -left-2" [ngClass]="action.icon"></i>
+    </div>
     } @for (hour of hours(); track hour) {
     <div
       class="min-h-10 h-full flex-1"

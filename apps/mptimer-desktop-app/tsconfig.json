@@ -3,5 +3,8 @@
   "compilerOptions": {
     "types": ["node"]
   },
-  "include": ["**/*.ts"]
+  "include": [
+    "**/*.ts",
+    "../../libs/events/event-models/src/lib/event-type.enum.ts"
+  ]
 }

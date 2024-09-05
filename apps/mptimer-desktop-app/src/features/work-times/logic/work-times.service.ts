@@ -5,10 +5,10 @@ import {
   interval,
   map,
 } from 'rxjs';
-import { EventModel } from '../../events/models/event.model';
 import { WorkTimesModel } from '../models/work-times.model';
 import { Store } from 'redux';
 import { getEvents } from '../../events/+state';
+import { EventModel } from 'event-models';
 
 export class WorkTimesService {
   private allEventsSubject$ = new BehaviorSubject<EventModel[]>([]);

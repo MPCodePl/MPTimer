@@ -1,9 +1,9 @@
 import { powerMonitor } from 'electron';
-import { EventModel } from '../models/event.model';
 import { Store } from 'redux';
 import { addEvent } from '../+state';
 import { interval } from 'rxjs';
 import log from 'electron-log';
+import { EventModel } from 'event-models';
 
 export class WorkspaceEventService {
   private idle: boolean;

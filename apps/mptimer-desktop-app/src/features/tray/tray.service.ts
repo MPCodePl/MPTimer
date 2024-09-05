@@ -1,9 +1,9 @@
 import { Tray, Menu, app, shell, MenuItemConstructorOptions } from 'electron';
 import { WorkTimesService } from '../work-times/logic/work-times.service';
-import { DateUtils } from '../utils/date.utils';
 import { WorkTimesModel } from '../work-times/models/work-times.model';
 import log from 'electron-log';
 import { MainWindow } from '../main-window/main-window';
+import { DateUtils } from 'utils';
 
 export class TrayService {
   private readonly RUNNING_TIME_MENU_ID = 'RunningTime';

@@ -1,24 +1,143 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, computed, inject } from '@angular/core';
 import { RouterModule } from '@angular/router';
-import { NxWelcomeComponent } from './nx-welcome.component';
+import { EventsService } from './events.service';
+import { JsonPipe } from '@angular/common';
+import {
+  TimeLineComponent,
+  TimeLineSectionActionModel,
+  TimeLineSectionActivityModel,
+  TimeLineSectionModel,
+} from 'time-line-ui';
+import { EventModel, MpEventType } from 'event-models';
+import { GuidUtils } from 'utils';
 
 @Component({
   standalone: true,
-  imports: [NxWelcomeComponent, RouterModule],
+  imports: [RouterModule, JsonPipe, TimeLineComponent],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
+  providers: [EventsService],
 })
 export class AppComponent implements OnInit {
-  title = 'mptimer-desktop-app-web';
+  private service = inject(EventsService);
+  public $events = this.service.$events;
+
+  public $sections = computed<TimeLineSectionModel[]>(() => [
+    {
+      id: 'RunTime',
+      name: 'Run time',
+      color: '#5d782e',
+      activities: this.getRuntimes(this.$events()),
+      actions: this.getActions(this.$events()),
+    },
+    {
+      id: 'ScreenLock',
+      name: 'Screen lock',
+      color: '#5b3417',
+      activities: this.getScreenLockActions(this.$events()),
+    },
+    {
+      id: 'IdleTime',
+      name: 'Idle time',
+      color: '#f8dd4c',
+      activities: [],
+    },
+  ]);
 
   constructor() {}
 
-  async ngOnInit(): Promise<void> {
-    const result = await (window as any).electron?.eventsInit();
-    console.log(result);
-    (window as any).electron.onEventsUpdated((events: any) => {
-      console.log(events);
-    });
+  ngOnInit() {
+    this.service.init();
+  }
+
+  private getRuntimes(events: EventModel[]): TimeLineSectionActivityModel[] {
+    const MAX_DIFFERENCE_BETWEEN_TIMES = 2 * 60 * 1000;
+    const aliveEvents = events.filter((a) => a.type === 'Alive');
+    const sortedAliveEvents = [...aliveEvents].sort(
+      (a, b) => a.date.getTime() - b.date.getTime()
+    );
+    let result: TimeLineSectionActivityModel[] = [];
+    let previous: EventModel | null = null;
+
+    for (const alive of sortedAliveEvents) {
+      if (previous == null) {
+        result.push({
+          id: GuidUtils.generateGuid(),
+          from: alive.date,
+          to: alive.date,
+        });
+      }
+
+      const lastRecord = result[result.length - 1];
+      if (previous != null) {
+        if (
+          Math.abs(alive.date.getTime() - previous.date.getTime()) >
+          MAX_DIFFERENCE_BETWEEN_TIMES
+        ) {
+          result.push({
+            id: GuidUtils.generateGuid(),
+            from: alive.date,
+            to: alive.date,
+          });
+        } else {
+          lastRecord.to = alive.date;
+        }
+      }
+
+      previous = alive;
+    }
+
+    return result;
+  }
+
+  private getActions(events: EventModel[]): TimeLineSectionActionModel[] {
+    const ACTIONS: MpEventType[] = ['AppStarted', 'AppStopped'];
+    const actions = events.filter((e) => ACTIONS.includes(e.type));
+    return actions.map((e) => ({
+      id: e.id,
+      date: e.date,
+      name:
+        e.type === 'AppStarted' ? 'Application started' : 'Application stoped',
+      icon: e.type === 'AppStarted' ? 'ri-play-line' : 'ri-stop-circle-line',
+    }));
+  }
+
+  private getScreenLockActions(
+    events: EventModel[]
+  ): TimeLineSectionActivityModel[] {
+    const LOCK_EVENT_TYPES: MpEventType[] = ['UserLock', 'UserUnlock'];
+    const lockEvents = events.filter((e) => LOCK_EVENT_TYPES.includes(e.type));
+    if (lockEvents.length === 0) {
+      return [];
+    }
+
+    const sortedLockEvents = [...lockEvents].sort(
+      (a, b) => a.date.getTime() - b.date.getTime()
+    );
+    let result: TimeLineSectionActivityModel[] = [];
+    for (const lockEvent of sortedLockEvents) {
+      const lastLockEvent = result[result.length - 1];
+      if (
+        lockEvent.type === 'UserLock' &&
+        (lastLockEvent == null || lastLockEvent.to != null)
+      ) {
+        result.push({
+          id: GuidUtils.generateGuid(),
+          from: lockEvent.date,
+          to: undefined,
+        });
+      }
+
+      if (
+        lockEvent.type === 'UserUnlock' &&
+        lastLockEvent != null &&
+        lastLockEvent.to == null
+      ) {
+        lastLockEvent.to = lockEvent.date;
+      }
+    }
+
+    return result;
   }
 }

@@ -5,7 +5,7 @@ import { rendererAppName, rendererAppPort } from '../../app/constants';
 import { format } from 'url';
 import { ipcMain } from 'electron/main';
 import { WorkTimesService } from '../work-times/logic/work-times.service';
-import { EventModel } from '../events/models/event.model';
+import { EventModel } from 'event-models';
 
 export class MainWindow {
   constructor(

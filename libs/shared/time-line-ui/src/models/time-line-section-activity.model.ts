@@ -1,6 +1,6 @@
 export interface TimeLineSectionActivityModel {
   id: string;
   from: Date;
-  to: Date;
+  to?: Date;
   notes?: string;
 }
