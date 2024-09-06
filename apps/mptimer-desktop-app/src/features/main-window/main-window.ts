@@ -95,6 +95,7 @@ export class MainWindow {
 
       // Create the browser window.
       this.mainWindow = new BrowserWindow({
+        icon: `${__dirname}/assets/tray.ico`,
         width: width,
         height: height,
         show: false,
