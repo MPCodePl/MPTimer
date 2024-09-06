@@ -23,10 +23,17 @@ export class EventsDbService {
 
   private addEventInternal(db: Database, event: EventModel): Promise<void> {
     return new Promise((resolve, reject) => {
-      const sql = `INSERT INTO Event (id, type, date, synced) VALUES ("${
-        event.id
-      }", "${event.type}", "${event.date.toISOString()}", 0)`;
-      db.run(sql, (err) => {
+      const stmt = db.prepare(
+        'INSERT INTO Event (id, type, date, synced, notes) VALUES (?, ?, ?, ?, ?)'
+      );
+      stmt.run(
+        event.id,
+        event.type,
+        event.date.toISOString(),
+        0,
+        JSON.stringify(event.notes)
+      );
+      stmt.finalize((err) => {
         if (err != null) {
           log.error(
             `${EventsDbService.name}.addEventInternal - error when adding entry`,
@@ -61,7 +68,7 @@ export class EventsDbService {
     return new Promise((resolve, reject) => {
       const dateAsString = DateUtils.format(date, { includeTime: false });
       db.all<EventModel>(
-        `SELECT id, type, date, synced FROM Event WHERE Date LIKE '${dateAsString}%'`,
+        `SELECT id, type, date, synced, notes FROM Event WHERE Date LIKE '${dateAsString}%'`,
         (err, rows) => {
           if (err != null) {
             log.error(
@@ -74,7 +81,13 @@ export class EventsDbService {
           log.debug(
             `${EventsDbService.name}.loadEventsInternal - Events loaded ${rows.length}`
           );
-          resolve(rows.map((r) => ({ ...r, date: new Date(r.date) })));
+          resolve(
+            rows.map((r) => ({
+              ...r,
+              date: new Date(r.date),
+              notes: r.notes != null ? JSON.parse(r.notes as string) : null,
+            }))
+          );
         }
       );
     });

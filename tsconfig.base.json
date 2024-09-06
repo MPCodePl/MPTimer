@@ -16,13 +16,19 @@
     "baseUrl": ".",
     "paths": {
       "colors": ["libs/colors/src/index.ts"],
+      "event-logic": ["libs/events/event-logic/src/index.ts"],
       "event-models": ["libs/events/event-models/src/index.ts"],
       "mptimer/backoffice-app-feature": [
         "libs/backoffice-app/backoffice-app-feature/src/index.ts"
       ],
+      "repository-list-ui": [
+        "libs/repositories/repository-list-ui/src/index.ts"
+      ],
+      "repository-models": ["libs/repositories/repository-models/src/index.ts"],
       "storybook-host": ["libs/storybook-host/src/index.ts"],
       "time-line-ui": ["libs/shared/time-line-ui/src/index.ts"],
-      "utils": ["libs/shared/utils/src/index.ts"]
+      "utils": ["libs/shared/utils/src/index.ts"],
+      "work-time-ui": ["libs/events/work-time-ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

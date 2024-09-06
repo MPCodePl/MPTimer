@@ -1,3 +1,19 @@
 <div class="p-2">
-  <lib-time-line [sections]="$sections()"> </lib-time-line>
+  <div class="mb-2 p-2 border border-black w-1/2">
+    <lib-work-time-ui [workTimes]="$workTimes()"></lib-work-time-ui>
+  </div>
+  <div class="mb-2">
+    <lib-time-line [sections]="$sections()"> </lib-time-line>
+  </div>
+  <div
+    class="bg-slate-500 px-4 py-2 hover:bg-slate-700 hover:cursor-pointer text-white"
+    (click)="addRepository()"
+  >
+    Add repository
+  </div>
+  <lib-repository-list
+    [repositories]="$repositories()"
+    (removed)="removeRepository($event)"
+  ></lib-repository-list>
 </div>
+<p-confirmDialog />

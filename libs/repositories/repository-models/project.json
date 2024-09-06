@@ -1,0 +1,9 @@
+{
+  "name": "repository-models",
+  "$schema": "../../../node_modules/nx/schemas/project-schema.json",
+  "sourceRoot": "libs/repositories/repository-models/src",
+  "projectType": "library",
+  "tags": [],
+  "// targets": "to see all targets run: nx show project repository-models --web",
+  "targets": {}
+}

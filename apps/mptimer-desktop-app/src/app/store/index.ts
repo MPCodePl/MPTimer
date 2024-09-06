@@ -1,8 +1,9 @@
 import { combineSlices, configureStore } from '@reduxjs/toolkit';
 import { Epic, combineEpics, createEpicMiddleware } from 'redux-observable';
 import { eventSlice } from '../../features/events/+state';
+import { repositorySlice } from '../../features/repositories/+state';
 
-export const rootReducer = combineSlices(eventSlice);
+export const rootReducer = combineSlices(eventSlice, repositorySlice);
 
 const epicMiddleware = createEpicMiddleware();
 

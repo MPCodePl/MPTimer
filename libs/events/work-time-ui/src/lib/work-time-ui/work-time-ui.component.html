@@ -1,0 +1,10 @@
+<div>
+  <div class="flex">
+    <span class="font-semibold w-32">Worked hours:</span>
+    {{ format(workTimes().workTimeSeconds) }}
+  </div>
+  <div class="flex">
+    <span class="font-semibold w-32">Lock time:</span>
+    {{ format(workTimes().breakTimeSeconds) }}
+  </div>
+</div>

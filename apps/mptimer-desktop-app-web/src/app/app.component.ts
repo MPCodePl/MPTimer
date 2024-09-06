@@ -10,18 +10,33 @@ import {
 } from 'time-line-ui';
 import { EventModel, MpEventType } from 'event-models';
 import { GuidUtils } from 'utils';
+import { WorkTimeUiComponent } from 'work-time-ui';
+import { EventLogic } from 'event-logic';
+import { RepositoryService } from './repository.service';
+import { RepositoryListComponent } from 'repository-list-ui';
+import { ConfirmDialogModule } from 'primeng/confirmdialog';
+import { ConfirmationService } from 'primeng/api';
 
 @Component({
   standalone: true,
-  imports: [RouterModule, JsonPipe, TimeLineComponent],
+  imports: [
+    RouterModule,
+    JsonPipe,
+    TimeLineComponent,
+    WorkTimeUiComponent,
+    RepositoryListComponent,
+    ConfirmDialogModule,
+  ],
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrl: './app.component.scss',
-  providers: [EventsService],
+  providers: [EventsService, RepositoryService, ConfirmationService],
 })
 export class AppComponent implements OnInit {
-  private service = inject(EventsService);
-  public $events = this.service.$events;
+  private eventsService = inject(EventsService);
+  private repositoryService = inject(RepositoryService);
+  public $events = this.eventsService.$events;
+  public $repositories = this.repositoryService.$repositories;
 
   public $sections = computed<TimeLineSectionModel[]>(() => [
     {
@@ -41,14 +56,31 @@ export class AppComponent implements OnInit {
       id: 'IdleTime',
       name: 'Idle time',
       color: '#f8dd4c',
-      activities: [],
+      activities: this.getIdleTimeActions(this.$events()),
     },
+    ...this.$repositories().map((r) => ({
+      id: r.id,
+      name: r.name,
+      color: '#000',
+      activities: this.getRepositoryBranches(this.$events(), r.id),
+    })),
   ]);
 
-  constructor() {}
+  public $workTimes = computed(() =>
+    new EventLogic().countWorkTimes(this.$events())
+  );
 
   ngOnInit() {
-    this.service.init();
+    this.eventsService.init();
+    this.repositoryService.init();
+  }
+
+  public async addRepository(): Promise<void> {
+    (window as any).electron?.addRepository();
+  }
+
+  public removeRepository(args: { repositoryId: string }): void {
+    this.repositoryService.remove({ repositoryId: args.repositoryId });
   }
 
   private getRuntimes(events: EventModel[]): TimeLineSectionActivityModel[] {
@@ -106,7 +138,50 @@ export class AppComponent implements OnInit {
   private getScreenLockActions(
     events: EventModel[]
   ): TimeLineSectionActivityModel[] {
-    const LOCK_EVENT_TYPES: MpEventType[] = ['UserLock', 'UserUnlock'];
+    return this.calculateActions(events, 'UserLock', 'UserUnlock');
+  }
+
+  private getIdleTimeActions(
+    events: EventModel[]
+  ): TimeLineSectionActivityModel[] {
+    return this.calculateActions(events, 'UserIdle', 'UserUnIdle');
+  }
+
+  private getRepositoryBranches(
+    events: EventModel[],
+    repositoryId: string
+  ): TimeLineSectionActivityModel[] {
+    const branchChangeEvents = events.filter(
+      (e) =>
+        e.type === 'RepositoryBranchChange' &&
+        (e.notes as any)?.repositoryId === repositoryId
+    );
+    const branchChangeEventsSorted = [...branchChangeEvents].sort(
+      (a, b) => a.date.getTime() - b.date.getTime()
+    );
+    let result: TimeLineSectionActivityModel[] = [];
+    for (const event of branchChangeEventsSorted) {
+      const previousResult = result[result.length - 1];
+      if (previousResult != null) {
+        previousResult.to = event.date;
+      }
+
+      result.push({
+        id: event.id,
+        from: event.date,
+        notes: (event.notes as any)?.branchName,
+      });
+    }
+
+    return result;
+  }
+
+  private calculateActions(
+    events: EventModel[],
+    startEvent: MpEventType,
+    endEvent: MpEventType
+  ): TimeLineSectionActivityModel[] {
+    const LOCK_EVENT_TYPES: MpEventType[] = [startEvent, endEvent];
     const lockEvents = events.filter((e) => LOCK_EVENT_TYPES.includes(e.type));
     if (lockEvents.length === 0) {
       return [];
@@ -119,7 +194,7 @@ export class AppComponent implements OnInit {
     for (const lockEvent of sortedLockEvents) {
       const lastLockEvent = result[result.length - 1];
       if (
-        lockEvent.type === 'UserLock' &&
+        lockEvent.type === startEvent &&
         (lastLockEvent == null || lastLockEvent.to != null)
       ) {
         result.push({
@@ -130,7 +205,7 @@ export class AppComponent implements OnInit {
       }
 
       if (
-        lockEvent.type === 'UserUnlock' &&
+        lockEvent.type === endEvent &&
         lastLockEvent != null &&
         lastLockEvent.to == null
       ) {

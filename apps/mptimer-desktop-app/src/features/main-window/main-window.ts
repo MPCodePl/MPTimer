@@ -1,4 +1,4 @@
-import { BrowserWindow, screen } from 'electron';
+import { BrowserWindow, dialog, screen } from 'electron';
 import log from 'electron-log';
 import { join } from 'path';
 import { rendererAppName, rendererAppPort } from '../../app/constants';
@@ -6,19 +6,52 @@ import { format } from 'url';
 import { ipcMain } from 'electron/main';
 import { WorkTimesService } from '../work-times/logic/work-times.service';
 import { EventModel } from 'event-models';
+import { Store } from 'redux';
+import { RepositoryModel } from 'repository-models';
+import { addRepository, removeRepository } from '../repositories/+state';
+import { RepositoryService } from '../repositories/logic/repository.service';
 
 export class MainWindow {
   constructor(
     private isPackaged: boolean,
-    private workTimesService: WorkTimesService
+    private workTimesService: WorkTimesService,
+    private repositoryService: RepositoryService,
+    private store: Store
   ) {}
 
   private mainWindow: Electron.BrowserWindow;
   private events: EventModel[];
+  private repositories: RepositoryModel[];
 
   public init(): void {
     ipcMain.handle('eventsInit', (event) => {
       return this.events;
+    });
+
+    ipcMain.handle('repositoryInit', (event) => {
+      return this.repositories;
+    });
+
+    ipcMain.on('removeRepository', (event, { repositoryId }) => {
+      this.store.dispatch(removeRepository({ repositoryId }));
+    });
+
+    ipcMain.on('addRepository', async (event) => {
+      log.debug('addRepository - start');
+      const file = await dialog.showOpenDialog(this.mainWindow, {
+        properties: ['openDirectory'],
+      });
+      if (file.canceled) {
+        log.debug('addRepository - dialog cancelled');
+        return;
+      }
+
+      const path = file.filePaths[0];
+      log.debug(`addRepository - selected path "${path}"`);
+      const pathSplitted = path.split('\\');
+      const repositoryName = pathSplitted[pathSplitted.length - 1];
+      const repository = new RepositoryModel(repositoryName, path, new Date());
+      this.store.dispatch(addRepository({ repository }));
     });
 
     this.workTimesService.allEvents$.subscribe((events) => {
@@ -28,6 +61,15 @@ export class MainWindow {
       }
 
       this.mainWindow.webContents.send('eventsUpdated', events);
+    });
+
+    this.repositoryService.allRepositories$.subscribe((repositories) => {
+      this.repositories = repositories;
+      if (this.mainWindow == null) {
+        return;
+      }
+
+      this.mainWindow.webContents.send('repositoriesUpdated', repositories);
     });
   }
 
@@ -62,6 +104,7 @@ export class MainWindow {
           preload: join(__dirname, 'main.preload.js'),
         },
       });
+
       this.mainWindow.setMenu(null);
       this.mainWindow.center();
 

@@ -5,7 +5,6 @@ import App from './app/app';
 import log from 'electron-log/main';
 import * as path from 'path';
 import { resolve } from 'path';
-import { DBController } from './db/db-controller';
 import { DB } from './db/db';
 
 export default class Main {

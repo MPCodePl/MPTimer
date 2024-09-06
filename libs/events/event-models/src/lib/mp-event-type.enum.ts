@@ -5,4 +5,5 @@ export type MpEventType =
   | 'UserUnlock'
   | 'Alive'
   | 'UserIdle'
-  | 'UserUnIdle';
+  | 'UserUnIdle'
+  | 'RepositoryBranchChange';

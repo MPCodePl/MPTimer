@@ -1,0 +1,20 @@
+@for (repository of repositories(); track repository.id) {
+<div class="px-4 py-2 flex gap-4 hover:bg-slate-100">
+  <div class="flex items-center justify-center text-xl">
+    <i class="ri-git-repository-line"></i>
+  </div>
+  <div class="flex flex-col">
+    <div class="text-xl">{{ repository.name }}</div>
+    <div>{{ repository.path }}</div>
+  </div>
+  <div class="flex items-center">
+    {{ repository.date | date }}
+  </div>
+  <div class="ml-auto flex items-center">
+    <i
+      class="ri-delete-bin-line cursor-pointer hover:text-slate-800"
+      (click)="remove(repository.id)"
+    ></i>
+  </div>
+</div>
+}

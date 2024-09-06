@@ -12,6 +12,10 @@ import { DBController } from '../db/db-controller';
 import { MIGRATION_LIST } from '../db/migration-list';
 import { MainWindow } from '../features/main-window/main-window';
 import { EventModel } from 'event-models';
+import { loadRepositories } from '../features/repositories/+state';
+import repositoriesEpics from '../features/repositories/+state/repository.effects';
+import { RepositoryDbService } from '../features/repositories/logic/repository-db.service';
+import { RepositoryService } from '../features/repositories/logic/repository.service';
 
 export default class App {
   // Keep a global reference of the window object, if you don't, the window will
@@ -22,6 +26,7 @@ export default class App {
   static eventsDbService: EventsDbService;
   static flagQuit = false;
   static isQuiting = false;
+  static repositoryDbService: RepositoryDbService;
 
   public static isDevelopmentMode() {
     const isEnvironmentSet: boolean = 'ELECTRON_IS_DEV' in process.env;
@@ -63,28 +68,39 @@ export default class App {
     log.debug('Start App.setup');
     try {
       App.eventsDbService = new EventsDbService();
+      App.repositoryDbService = new RepositoryDbService();
 
       await DBController.initialize();
       await DBController.migrate(MIGRATION_LIST);
 
       log.debug('Setuping store');
       const eventEffect = eventsEpics(App.eventsDbService);
-      const store = setupStore([eventEffect]);
+      const repositoryEffect = repositoriesEpics(App.repositoryDbService);
+      const store = setupStore([eventEffect, repositoryEffect]);
 
       const workSpaceEvents = new WorkspaceEventService(store);
       const workTimeService = new WorkTimesService(store);
+      const repositoryService = new RepositoryService(
+        store,
+        workTimeService,
+        this.eventsDbService
+      );
       const mainWindow = new MainWindow(
         App.application.isPackaged,
-        workTimeService
+        workTimeService,
+        repositoryService,
+        store
       );
       const trayService = new TrayService(workTimeService, mainWindow);
 
       mainWindow.init();
+      repositoryService.init();
       workSpaceEvents.init();
       trayService.init();
 
       await App.eventsDbService.addEvent(new EventModel('AppStarted'));
       store.dispatch(loadEvents(new Date()));
+      store.dispatch(loadRepositories());
     } catch (err) {
       log.error('Error setup: ', err);
       throw err;

@@ -5,6 +5,7 @@
   },
   "include": [
     "**/*.ts",
-    "../../libs/events/event-models/src/lib/event-type.enum.ts"
+    "../../libs/events/event-models/src/lib/event-type.enum.ts",
+    "../../libs/events/work-time-ui/src/lib/work-time-ui/work-times.model.ts"
   ]
 }
