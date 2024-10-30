@@ -1,7 +1,13 @@
 {
   "name": "mptimer",
   "version": "0.0.0",
+  "author": "MPCode",
   "license": "MIT",
+  "repository": "https://github.com/MPCodePl/MPTimer",
+  "publish": {
+    "provider": "github",
+    "releaseType": "release"
+  },
   "scripts": {
     "start:landing": "nx serve mptimer-landing-page",
     "start:app": "nx serve mptimer-app",
@@ -9,6 +15,7 @@
     "start:desktop-web": "nx serve mptimer-desktop-app-web",
     "storybook": "npx nx run storybook-host:storybook",
     "package:desktop": "npx nx run-many -t build -p mptimer-desktop-app mptimer-desktop-app-web & npx nx run mptimer-desktop-app:package",
+    "make:desktop": "npx nx run-many -t build -p mptimer-desktop-app mptimer-desktop-app-web & npx nx run mptimer-desktop-app:make",
     "test": "nx run-many -t test",
     "build": "nx run-many -t build",
     "lint": "nx run-many -t lint",
@@ -102,6 +109,17 @@
     "ts-jest": "^29.1.0",
     "ts-node": "10.9.1",
     "typescript": "~5.5.2"
+  },
+  "build": {
+    "appId": "com.mptimer.net",
+    "productName": "MPTimer",
+    "win": {
+      "target": "nsis",
+      "icon": "social/favicon.ico"
+    },
+    "directories": {
+      "output": "dist"
+    }
   },
   "overrides": {
     "nx-electron": {

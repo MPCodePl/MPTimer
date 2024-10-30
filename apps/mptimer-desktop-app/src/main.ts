@@ -6,6 +6,7 @@ import log from 'electron-log/main';
 import * as path from 'path';
 import { resolve } from 'path';
 import { DB } from './db/db';
+import UpdateEvents from './app/events/update.events';
 
 export default class Main {
   static async initialize() {
@@ -14,12 +15,17 @@ export default class Main {
       app.quit();
     }
 
-    const mainPath = this.geMainPath();
+    const mainPath = this.getMainPath();
     log.transports.file.resolvePathFn = () =>
       path.join(mainPath, `logs/${new Date().toISOString().split('T')[0]}.log`);
     Object.assign(console, log.functions);
     log.initialize();
     log.debug('App started');
+    log.debug(
+      `initializing app in ${
+        !app.isPackaged ? 'development mode' : 'production mode'
+      }`
+    );
     log.debug(mainPath);
     const dbPath = resolve(mainPath, 'mptimer.db');
     DB.initialize(dbPath);
@@ -33,12 +39,17 @@ export default class Main {
     ElectronEvents.bootstrapElectronEvents();
 
     // initialize auto updater service
-    if (!App.isDevelopmentMode()) {
-      // UpdateEvents.initAutoUpdateService();
+    if (app.isPackaged) {
+      log.debug('initAutoUpdateService invoking');
+      UpdateEvents.initAutoUpdateService();
+    } else {
+      log.debug(
+        'Skipping initAutoUpdateService because app isDevelopmentMode is true'
+      );
     }
   }
 
-  static geMainPath(): string {
+  static getMainPath(): string {
     if (!app.isPackaged) {
       return __dirname.replace(/\\/g, '/');
     } else {

@@ -4,6 +4,7 @@ import log from 'electron-log';
 import { MainWindow } from '../main-window/main-window';
 import { DateUtils } from 'utils';
 import { WorkTimesModel } from 'event-logic';
+import * as path from 'path';
 
 export class TrayService {
   private readonly RUNNING_TIME_MENU_ID = 'RunningTime';
@@ -35,7 +36,7 @@ export class TrayService {
     },
     {
       label: 'Open in explorer',
-      click: () => shell.openPath(__dirname),
+      click: () => shell.openPath(this.getMainPath()),
     },
     {
       label: 'Quit',
@@ -91,5 +92,13 @@ export class TrayService {
 Running time: ${DateUtils.formatTimeSpan(workTimes.runningTimeSeconds)}
 Break time: ${DateUtils.formatTimeSpan(workTimes.breakTimeSeconds)}
 Work time: ${DateUtils.formatTimeSpan(workTimes.workTimeSeconds)}`;
+  }
+
+  private getMainPath(): string {
+    if (!app.isPackaged) {
+      return __dirname.replace(/\\/g, '/');
+    } else {
+      return path.dirname(app.getPath('exe')).replace(/\\/g, '/');
+    }
   }
 }
